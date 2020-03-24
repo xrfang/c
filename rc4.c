@@ -1,3 +1,6 @@
+/* RC4 cipher
+ * https://codereview.stackexchange.com/questions/41148
+ */
 #include "rc4.h"
 
 static void swap(uint8_t *a, uint8_t *b)

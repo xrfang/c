@@ -108,7 +108,6 @@ int lzw_compress(const char *inFile, const char *outFile)
         res = 1;
         goto done;
     }
-    return 1;
     out = fopen(outFile, "wb");
     if (out == NULL)
     {
