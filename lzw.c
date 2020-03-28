@@ -95,25 +95,9 @@ static int ReadNextCode(InputState *inState)
     return code;
 }
 
-int lzw_compress(const char *inFile, const char *outFile)
+int lzw_compress(FILE *in, FILE *out)
 {
-    FILE *in = NULL;
-    FILE *out = NULL;
     DictNode *dict = NULL;
-    int res = 0;
-
-    in = fopen(inFile, "rb");
-    if (in == NULL)
-    {
-        res = 1;
-        goto done;
-    }
-    out = fopen(outFile, "wb");
-    if (out == NULL)
-    {
-        res = 2;
-        goto done;
-    }
     int dictSize = 256;
     int nextByte = fgetc(in);
     uint16_t curNode = nextByte;
@@ -121,17 +105,11 @@ int lzw_compress(const char *inFile, const char *outFile)
     int leftoverByte = 0;
     // Abort on empty input file.
     if (nextByte == EOF)
-    {
-        res = 1;
-        goto done;
-    }
+        return 1;
     // Initialize the dictionary.
     dict = calloc(DICT_MAX, sizeof(DictNode));
     if (dict == NULL)
-    {
-        res = 3;
-        goto done;
-    }
+        return 3;
     while (1)
     {
         int curByte = fgetc(in);
@@ -186,37 +164,32 @@ int lzw_compress(const char *inFile, const char *outFile)
         // Start over a new sequence with the current byte.
         curNode = curByte;
     }
-done:
-    if (dict != NULL)
-        free(dict);
-    if (in != NULL)
+    free(dict);
+    return 0;
+}
+
+int lzw_comp_file(const char *inFile, const char *outFile)
+{
+    FILE * in = fopen(inFile, "rb");
+    if (in == NULL)
+        return 1;
+    FILE *out = fopen(outFile, "wb");
+    if (out == NULL)
+    {
         fclose(in);
-    if (out != NULL)
-        fclose(out);
+        return 2;
+    }
+    int res = lzw_compress(in, out);
+    fclose(in);
+    fclose(out);
     return res;
 }
 
-int lzw_decompress(const char *inFile, const char *outFile)
+int lzw_decompress(FILE *in, FILE *out)
 {
-    FILE *in = NULL;
-    FILE *out = NULL;
     DictEntry *dict = NULL;
     AllocInfo allocInfo;
     memset(&allocInfo, 0, sizeof(allocInfo));
-    int res = 0;
-
-    in = fopen(inFile, "rb");
-    if (in == NULL)
-    {
-        res = 1;
-        goto done;
-    }
-    out = fopen(outFile, "wb");
-    if (out == NULL)
-    {
-        res = 2;
-        goto done;
-    }
     int dictSize = 256;
     InputState inState = {in, 0, 0};
     uint16_t prevCode = ReadNextCode(&inState);
@@ -224,25 +197,19 @@ int lzw_decompress(const char *inFile, const char *outFile)
     int i = 0;
     // Abort on empty input file.
     if (prevCode == END_OF_FILE_CODE)
-    {
-        res = 1;
-        goto done;
-    }
+        return 1;
     // The maximum of all sequences will be if the sequences increase in length
     // steadily from 1..DICT_MAX.  Add in an extra 2 bytes per entry to account
     // for the fact that we round each allocation to 4 bytes in size.
     AllocInit(&allocInfo, DICT_MAX * DICT_MAX / 2 + DICT_MAX * 2);
     if (allocInfo.base == NULL)
-    {
-        res = 3;
-        goto done;
-    }
+        return 3;
     // Initialize dictionary to single character entries.
     dict = calloc(DICT_MAX, sizeof(DictEntry));
     if (dict == NULL)
     {
-        res = 3;
-        goto done;
+        free(allocInfo.base);
+        return 3;
     }
     for (i = 0; i < dictSize; i++)
     {
@@ -255,6 +222,7 @@ int lzw_decompress(const char *inFile, const char *outFile)
     mark = allocInfo.nextAlloc;
     // Output the first code sequence, which is always a single byte.
     fputc(prevCode, out);
+    int res = 0;
     while (1)
     {
         uint16_t code = ReadNextCode(&inState);
@@ -295,14 +263,24 @@ int lzw_decompress(const char *inFile, const char *outFile)
         fwrite(dict[code].seq, 1, dict[code].len, out);
         prevCode = code;
     }
-done:
-    if (dict != NULL)
-        free(dict);
-    if (allocInfo.base != NULL)
-        free(allocInfo.base);
-    if (in != NULL)
+    free(dict);
+    free(allocInfo.base);
+    return res;
+}
+
+int lzw_decomp_file(const char *inFile, const char *outFile)
+{
+    FILE *in = fopen(inFile, "rb");
+    if (in == NULL)
+        return 1;
+    FILE *out = fopen(outFile, "wb");
+    if (out == NULL)
+    {
         fclose(in);
-    if (out != NULL)
-        fclose(out);
+        return 2;
+    }
+    int res = lzw_decompress(in, out);
+    fclose(in);
+    fclose(out);
     return res;
 }

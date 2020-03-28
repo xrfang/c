@@ -1,6 +1,8 @@
 #ifndef LZW_H
 #define LZW_H
 
+#include <stdio.h>
+
 /*
 On success, returns 0, otherwise:
 1 - input file error
@@ -9,7 +11,9 @@ On success, returns 0, otherwise:
 4 - input stream corrupted (for decompress only)
 */
 
-int lzw_compress(const char *inFile, const char *outFile);
-int lzw_decompress(const char *inFile, const char *outFile);
+int lzw_comp_file(const char *inFile, const char *outFile);
+int lzw_compress(FILE *in, FILE *out);
+int lzw_decomp_file(const char *inFile, const char *outFile);
+int lzw_decompress(FILE *in, FILE *out);
 
 #endif

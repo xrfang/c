@@ -14,13 +14,13 @@ int main(int argc, char *argv[])
     int res = 0;
     if (strcmp(argv[1], "c") == 0)
     {
-        res = lzw_compress(argv[2], argv[3]);
+        res = lzw_comp_file(argv[2], argv[3]);
         if (res != 0)
             perror("compress");
     }
     else if (strcmp(argv[1], "d") == 0)
     {
-        res = lzw_decompress(argv[2], argv[3]);
+        res = lzw_decomp_file(argv[2], argv[3]);
         if (res != 0)
             perror("decompress");
     }
