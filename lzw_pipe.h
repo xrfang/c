@@ -2,6 +2,7 @@
 #define LZW_PIPE_H
 
 #include <pthread.h>
+#include <stdio.h>
 
 typedef struct LzwPipe
 {
