@@ -25,10 +25,7 @@ int main(int argc, char **argv)
 		return 1;
 	}
 	SplitterPipe sp;
-	char *name = malloc(strlen(argv[1]) + 10);
-	sprintf(name, "%s.%%d", argv[1]);
-	int res = SplitterPipeInit(&sp, name, bs);
-	free(name);
+	int res = SplitterPipeInit(&sp, argv[1], bs);
 	if (res != 0)
 	{
 		printf("ERROR: SplitterPipeInit: %s\n", strerror(res));

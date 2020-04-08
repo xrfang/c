@@ -61,8 +61,10 @@ int SplitterPipeInit(SplitterPipe *sp, const char *naming, int block)
 	sp->bsize = block;
 	sp->bcnt = 0;
 	sp->ccnt = 0;
-	sp->name = malloc(strlen(naming) + 1);
+	sp->name = malloc(strlen(naming) + 4);
 	strcpy(sp->name, naming);
+	if (strstr(sp->name, "%d") == NULL)
+		strcat(sp->name, "%d");
 	return pthread_create(&sp->tid, NULL, pipeSink, (void *)sp);
 }
 
