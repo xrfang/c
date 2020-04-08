@@ -56,6 +56,8 @@ int LzwPipeInitDecompressor(LzwPipe *zp, FILE *output)
 int LzwPipeWait(LzwPipe *zp)
 {
 	int res = fclose(zp->Handle);
+	if (res != 0)
+		res = errno;	
 	pthread_join(zp->tid, NULL);
 	return (zp->res == 0) ? res : zp->res;
 }
