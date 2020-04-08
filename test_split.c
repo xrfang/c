@@ -28,12 +28,12 @@ int main(int argc, char **argv)
 	char *name = malloc(strlen(argv[1]) + 10);
 	sprintf(name, "%s.%%d", argv[1]);
 	int res = SplitterPipeInit(&sp, name, bs);
+	free(name);
 	if (res != 0)
 	{
 		printf("ERROR: SplitterPipeInit: %s\n", strerror(res));
 		return 1;
 	}
-	free(name);
 	unsigned char buf[1024];
 	while (1)
 	{
@@ -60,5 +60,6 @@ int main(int argc, char **argv)
 	}
 	fclose(in);
 	int rc = SplitterPipeWait(&sp);
-	if (rc != 0) printf("ERROR: SplitterPipeWait: %s", strerror(rc));
+	if (rc != 0)
+		printf("ERROR: SplitterPipeWait: %s", strerror(rc));
 }

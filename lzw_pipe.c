@@ -57,7 +57,9 @@ int LzwPipeWait(LzwPipe *zp)
 {
 	int res = fclose(zp->Handle);
 	if (res != 0)
-		res = errno;	
+		res = errno;
 	pthread_join(zp->tid, NULL);
-	return (zp->res == 0) ? res : zp->res;
+	if (zp->res == 0)
+		zp->res = res;
+	return zp->res;
 }

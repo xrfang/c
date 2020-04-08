@@ -72,5 +72,7 @@ int SplitterPipeWait(SplitterPipe *sp)
 	if (res != 0)
 		res = errno;
 	pthread_join(sp->tid, NULL);
-	return (sp->res == 0) ? res : sp->res;
+	if (sp->res == 0)
+		sp->res = res;
+	return sp->res;
 }
