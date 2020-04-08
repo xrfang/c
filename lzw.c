@@ -170,7 +170,7 @@ int lzw_compress(FILE *in, FILE *out)
 
 int lzw_comp_file(const char *inFile, const char *outFile)
 {
-    FILE * in = fopen(inFile, "rb");
+    FILE *in = fopen(inFile, "rb");
     if (in == NULL)
         return 1;
     FILE *out = fopen(outFile, "wb");
