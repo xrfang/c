@@ -18,6 +18,7 @@ static void *pipeSink(void *arg)
 	int res = fclose(p->input);
 	if (p->res == 0)
 		p->res = res;
+	return NULL;
 }
 
 static int lzwpInit(LzwPipe *zp, FILE *output)
