@@ -15,6 +15,7 @@ typedef struct SplitterPipe
 	int bsize;
 	int ccnt;
 	int res;
+	int Count;
 } SplitterPipe;
 
 int SplitterPipeInit(SplitterPipe *sp, const char *naming, int block);

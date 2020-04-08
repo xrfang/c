@@ -59,4 +59,6 @@ int main(int argc, char **argv)
 	int rc = SplitterPipeWait(&sp);
 	if (rc != 0)
 		printf("ERROR: SplitterPipeWait: %s", strerror(rc));
+	else
+		printf("splitted `%s` into %d blocks\n", argv[1], sp.Count);
 }
