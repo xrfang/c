@@ -61,5 +61,7 @@ int main(int argc, char **argv)
 	fclose(in);
 	int rc = PackagerWait(&p);
 	if (rc != 0)
-		printf("ERROR: PackagerWait: %s", strerror(rc));
+		printf("ERROR: PackagerWait: %s\n", strerror(rc));
+	else
+		printf("packed `%s` into %d blocks\n", argv[1], p.Count);
 }

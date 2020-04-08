@@ -52,6 +52,7 @@ int PackagerInit(Packager *p, const char *name, int block)
 	if (rc != 0)
 		return rc;
 	p->Handle = p->zp.Handle;
+	p->Count = -1;
 	return 0;
 }
 
@@ -59,6 +60,7 @@ int PackagerWait(Packager *p)
 {
 	LzwPipeWait(&p->zp);
 	SplitterPipeWait(&p->sp);
+	p->Count = p->sp.Count;
 	if (p->zp.res != 0)
 		return p->zp.res;
 	return p->sp.res;

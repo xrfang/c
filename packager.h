@@ -9,6 +9,7 @@ typedef struct Packager
 	FILE *Handle;
 	LzwPipe zp;
 	SplitterPipe sp;
+	int Count;
 } Packager;
 
 int PackagerInit(Packager *p, const char *name, int block);
