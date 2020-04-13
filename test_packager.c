@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 	Packager p;
 	char *name = malloc(strlen(argv[2]) + 10);
 	sprintf(name, "%s.%%d", argv[2]);
-	int res = PackagerInit(&p, name, bs);
+	int res = PackagerInit(&p, name, bs, true);
 	free(name);
 	if (res != 0)
 	{

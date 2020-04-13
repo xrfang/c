@@ -37,8 +37,9 @@ static int mkdir_p(const char *path)
 	return 0;
 }
 
-int PackagerInit(Packager *p, const char *name, int block)
+int PackagerInit(Packager *p, const char *name, int block, bool compress)
 {
+	p->compress = compress;
 	char *path = malloc(strlen(name) + 1);
 	strcpy(path, name);
 	int rc = mkdir_p(dirname(path));
@@ -48,20 +49,26 @@ int PackagerInit(Packager *p, const char *name, int block)
 	rc = SplitterPipeInit(&p->sp, name, block);
 	if (rc != 0)
 		return rc;
-	rc = LzwPipeInitCompressor(&p->zp, p->sp.Handle);
-	if (rc != 0)
-		return rc;
-	p->Handle = p->zp.Handle;
+	if (compress)
+	{
+		rc = LzwPipeInitCompressor(&p->zp, p->sp.Handle);
+		if (rc != 0)
+			return rc;
+		p->Handle = p->zp.Handle;
+	}
+	else
+		p->Handle = p->sp.Handle;
 	p->Count = -1;
 	return 0;
 }
 
 int PackagerWait(Packager *p)
 {
-	LzwPipeWait(&p->zp);
+	if (p->compress)
+		LzwPipeWait(&p->zp);
 	SplitterPipeWait(&p->sp);
 	p->Count = p->sp.Count;
-	if (p->zp.res != 0)
+	if (p->compress && p->zp.res != 0)
 		return p->zp.res;
 	return p->sp.res;
 }
