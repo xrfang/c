@@ -8,6 +8,7 @@
 
 int map_init(Map *m, int item_len, int key_len)
 {
+	printf("map_init: item_len=%d; key_len=%d\n", item_len, key_len);
 	if (item_len <= 0 || key_len <= 0 || key_len > item_len)
 		return 1; //invalid argument
 	m->item_len = item_len;
@@ -15,6 +16,7 @@ int map_init(Map *m, int item_len, int key_len)
 	m->cap = 0;
 	m->cnt = 0;
 	m->buf = NULL;
+	m->cmpfunc = NULL;
 	return 0;
 }
 
@@ -47,6 +49,8 @@ int map_walk(Map *m, map_iter iter)
 
 void *map_find(Map *m, void *key, int *idx)
 {
+	if (m->cmpfunc == NULL)
+		m->cmpfunc = memcmp;
 	int first = 0;
 	int last = m->cnt - 1;
 	int middle = (first + last) / 2;
@@ -54,7 +58,7 @@ void *map_find(Map *m, void *key, int *idx)
 	while (first <= last)
 	{
 		void *haystack = m->buf + m->key_len * middle;
-		rc = memcmp(haystack, key, m->key_len);
+		rc = m->cmpfunc(haystack, key, m->key_len);
 		if (rc == 0)
 			return haystack;
 		if (rc < 0)
@@ -79,6 +83,7 @@ int map_add(Map *m, void *item)
 	}
 	if (m->cap == m->cnt)
 	{
+		printf("realloc: cap=%d; item_len=%d; next: %d\n", m->cap, m->item_len, (m->cap + 1) * m->item_len);
 		void *buf = realloc(m->buf, (m->cap + 1) * m->item_len);
 		if (buf == NULL)
 			return -1;

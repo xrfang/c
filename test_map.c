@@ -18,12 +18,23 @@ void show(Map *m)
 	printf("\n");
 }
 
-int walk(void *buf, int len)
+int walk(const void *buf, size_t len)
 {
 	char c = ((char *)buf)[0];
 	if (strchr("aeiou", c))
 		return 1;
 	return 0;
+}
+
+int walkstr(const void *buf, size_t len)
+{
+	printf("has: %s\n", (char *)buf);
+	return 0;
+}
+
+int comp(const void *haystack, const void *needle, size_t len)
+{
+	return strncmp((char *)haystack, (char *)needle, len);
 }
 
 int main(int argc, char **argv)
@@ -57,5 +68,28 @@ int main(int argc, char **argv)
 	else
 		printf("vowel letter not found\n");
 	show(&m);
+	map_free(&m);
+	printf("now test string map...\n");
+	map_init(&m, sizeof(char *), sizeof(char *));
+	m.cmpfunc = comp;
+	char a[10] = "a";
+	char b[10] = "ab";
+	char c[10] = "abc";
+	char d[10] = "d";
+	char e[10] = "de";
+	char f[10] = "def";
+	map_add(&m, a);
+	map_add(&m, b);
+	map_add(&m, c);
+	map_add(&m, d);
+	map_add(&m, e);
+	map_add(&m, f);
+	/*
+	map_add(&m, "d");
+	map_add(&m, "de");
+	map_add(&m, "def");
+	*/
+	printf("map has %d items\n", m.cnt);
+	map_walk(&m, walkstr);
 	map_free(&m);
 }

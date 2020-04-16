@@ -1,7 +1,10 @@
 #ifndef MAP_H
 #define MAP_H
 
-typedef int (*map_iter)(void *, int);
+#include <stddef.h>
+
+typedef int (*map_iter)(const void *, size_t);
+typedef int (*map_cmp)(const void *, const void *, size_t);
 
 typedef struct
 {
@@ -10,6 +13,7 @@ typedef struct
 	int cnt;	  //item count
 	int cap;	  //capacity of buf in term of # of items
 	void *buf;
+	map_cmp cmpfunc;   
 } Map;
 
 //0=success; 1=invalid argument
