@@ -1,5 +1,5 @@
-#ifndef AIRSWITCH_PACKGER_H
-#define AIRSWITCH_PACKGER_H
+#ifndef PACKGER_H
+#define PACKGER_H
 
 #include <stdbool.h>
 

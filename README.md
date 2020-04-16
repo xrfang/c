@@ -7,4 +7,7 @@ for embeded application.
 
 - CRC16 (CCITT)
 - LZW compression
+- LZW pipeline
+- File splitter pipeline
+- Packager (LZW + splitter pipeline)
 - RC4 cipher
