@@ -1,7 +1,3 @@
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "map.h"
 
 int map_init(Map *m, int item_len, int key_len)

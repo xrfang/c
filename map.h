@@ -1,6 +1,12 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include <stddef.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
 typedef int (*map_iter)(const void *, size_t);
 typedef int (*map_cmp)(const void *, const void *, size_t);
 
