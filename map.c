@@ -68,6 +68,11 @@ void *map_find(Map *m, void *key, int *idx)
 	return ptr;
 }
 
+void *map_find_addr(Map *m, void *key, int *idx)
+{
+	return map_find(m, &key, idx);
+}
+
 int map_add(Map *m, void *item)
 {
 	int idx;

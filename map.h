@@ -29,6 +29,7 @@ int map_setcap(Map *m, int cap);
 //NULL=not found; otherwise pointer to item
 //idx: if not NULL, store position of item found/to insert
 void *map_find(Map *m, void *key, int *idx);
+void *map_find_addr(Map *m, void *key, int *idx);
 
 //0=inserted; 1=updated; -1=out-of-memory
 int map_add(Map *m, void *item);

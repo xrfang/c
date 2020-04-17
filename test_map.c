@@ -37,7 +37,7 @@ int comp(const void *haystack, const void *needle, size_t len)
 {
 	char *ptr1 = *(char **)haystack;
 	char *ptr2 = *(char **)needle;
-	return strcmp(ptr1, ptr2); 
+	return strcmp(ptr1, ptr2);
 }
 
 int main(int argc, char **argv)
@@ -83,6 +83,17 @@ int main(int argc, char **argv)
 	map_add_addr(&m, "def");
 	map_del_addr(&m, "abcdefghi");
 	map_add_addr(&m, "abc");
+	int idx;
+	char **p = map_find_addr(&m, "abc", &idx);
+	if (p == NULL)
+		printf("abc not found!\n");
+	else
+		printf("found %s, idx=%d\n", *p, idx);
+	p = map_find_addr(&m, "abcd", NULL);
+	if (p == NULL)
+		printf("abcd not found!\n");
+	else
+		printf("found: %s, idx=%d\n", *p, idx);
 	printf("map has %d items\n", m.cnt);
 	map_walk(&m, walkstr);
 	map_free(&m);
