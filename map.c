@@ -1,16 +1,16 @@
+#include <assert.h>
+
 #include "map.h"
 
-int map_init(Map *m, int item_len, int key_len)
+void map_init(Map *m, int item_len, int key_len)
 {
-	if (item_len <= 0 || key_len <= 0 || key_len > item_len)
-		return 1; //invalid argument
+	assert(item_len > 0 && key_len > 0 && item_len >= key_len);
 	m->item_len = item_len;
 	m->key_len = key_len;
 	m->cap = 0;
 	m->cnt = 0;
 	m->buf = NULL;
 	m->cmpfunc = NULL;
-	return 0;
 }
 
 int map_setcap(Map *m, int cap)

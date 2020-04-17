@@ -20,8 +20,7 @@ typedef struct
 	map_cmp cmpfunc;
 } Map;
 
-//0=success; 1=invalid argument
-int map_init(Map *m, int item_len, int key_len);
+void map_init(Map *m, int item_len, int key_len);
 
 //0=success; 1=cap too small; -1=out-of-memory
 int map_setcap(Map *m, int cap);
