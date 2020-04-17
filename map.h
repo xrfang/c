@@ -41,4 +41,6 @@ int map_walk(Map *m, map_iter iter);
 
 void map_free(Map *m);
 
+int map_cmpstr(const void *haystack, const void *needle, size_t len);
+
 #endif

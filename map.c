@@ -49,11 +49,11 @@ void *map_find(Map *m, void *key, int *idx)
 	void *ptr = NULL;
 	while (first <= last)
 	{
-		char *haystack = (char *)m->buf + m->item_len * middle;
+		void *haystack = (char *)m->buf + m->item_len * middle;
 		int rc = m->cmpfunc(haystack, key, m->item_len);
 		if (rc == 0)
 		{
-			ptr = (void *)haystack;
+			ptr = haystack;
 			break;
 		}
 		if (rc < 0)
@@ -75,7 +75,7 @@ void *map_find_addr(Map *m, void *key, int *idx)
 int map_add(Map *m, void *item)
 {
 	int idx;
-	char *p = (char *)map_find(m, item, &idx);
+	char *p = map_find(m, item, &idx);
 	if (p != NULL)
 	{
 		memcpy(p, item, m->item_len);
@@ -105,7 +105,7 @@ int map_add_addr(Map *m, void *item)
 int map_del(Map *m, void *item)
 {
 	int idx;
-	char *p = (char *)map_find(m, item, &idx);
+	char *p = map_find(m, item, &idx);
 	if (p == NULL)
 		return 0;
 	memmove(p, p + m->item_len, (m->cnt - idx - 1) * m->item_len);
@@ -124,4 +124,11 @@ void map_free(Map *m)
 	m->buf = NULL;
 	m->cnt = 0;
 	m->cap = 0;
+}
+
+int map_cmpstr(const void *haystack, const void *needle, size_t len)
+{
+	char *ptr1 = *(char **)haystack;
+	char *ptr2 = *(char **)needle;
+	return strcmp(ptr1, ptr2);
 }

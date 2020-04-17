@@ -29,15 +29,8 @@ int walk(const void *buf, size_t len)
 
 int walkstr(const void *buf, size_t len)
 {
-	printf("has: %s\n", *((char **)buf));
+	printf("has: %s\n", *(char **)buf);
 	return 0;
-}
-
-int comp(const void *haystack, const void *needle, size_t len)
-{
-	char *ptr1 = *(char **)haystack;
-	char *ptr2 = *(char **)needle;
-	return strcmp(ptr1, ptr2);
 }
 
 int main(int argc, char **argv)
@@ -74,14 +67,15 @@ int main(int argc, char **argv)
 	map_free(&m);
 	printf("now test string map...\n");
 	map_init(&m, sizeof(char *));
-	m.cmpfunc = comp;
+	m.cmpfunc = map_cmpstr;
 	map_add_addr(&m, "a");
 	map_add_addr(&m, "ab");
 	map_add_addr(&m, "abcdefghi");
 	map_add_addr(&m, "d");
 	map_add_addr(&m, "de");
 	map_add_addr(&m, "def");
-	map_del_addr(&m, "abcdefghi");
+	map_del_addr(&m, "de");
+	map_del_addr(&m, "de"); //delete again has no effect
 	map_add_addr(&m, "abc");
 	int idx;
 	char **p = map_find_addr(&m, "abc", &idx);
