@@ -43,7 +43,7 @@ int comp(const void *haystack, const void *needle, size_t len)
 int main(int argc, char **argv)
 {
 	Map m;
-	map_init(&m, 1, 1);
+	map_init(&m, 1);
 	map_setcap(&m, 10);
 	printf("inserting to map...\n");
 	char buf[7] = "kctepi";
@@ -73,7 +73,7 @@ int main(int argc, char **argv)
 	show(&m);
 	map_free(&m);
 	printf("now test string map...\n");
-	map_init(&m, sizeof(char *), sizeof(char *));
+	map_init(&m, sizeof(char *));
 	m.cmpfunc = comp;
 	map_add_addr(&m, "a");
 	map_add_addr(&m, "ab");
@@ -86,12 +86,12 @@ int main(int argc, char **argv)
 	int idx;
 	char **p = map_find_addr(&m, "abc", &idx);
 	if (p == NULL)
-		printf("abc not found!\n");
+		printf("abc not found\n");
 	else
 		printf("found %s, idx=%d\n", *p, idx);
 	p = map_find_addr(&m, "abcd", NULL);
 	if (p == NULL)
-		printf("abcd not found!\n");
+		printf("abcd not found\n");
 	else
 		printf("found: %s, idx=%d\n", *p, idx);
 	printf("map has %d items\n", m.cnt);

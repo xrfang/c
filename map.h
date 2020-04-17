@@ -13,14 +13,13 @@ typedef int (*map_cmp)(const void *, const void *, size_t);
 typedef struct
 {
 	int item_len; //length of each item
-	int key_len;  //length of key (which is a prefix of item)
 	int cnt;	  //item count
 	int cap;	  //capacity of buf in term of # of items
 	void *buf;
 	map_cmp cmpfunc;
 } Map;
 
-void map_init(Map *m, int item_len, int key_len);
+void map_init(Map *m, int item_len);
 
 //0=success; 1=cap too small; -1=out-of-memory
 int map_setcap(Map *m, int cap);

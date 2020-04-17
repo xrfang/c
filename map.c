@@ -2,11 +2,10 @@
 
 #include "map.h"
 
-void map_init(Map *m, int item_len, int key_len)
+void map_init(Map *m, int item_len)
 {
-	assert(item_len > 0 && key_len > 0 && item_len >= key_len);
+	assert(item_len > 0);
 	m->item_len = item_len;
-	m->key_len = key_len;
 	m->cap = 0;
 	m->cnt = 0;
 	m->buf = NULL;
@@ -50,8 +49,8 @@ void *map_find(Map *m, void *key, int *idx)
 	void *ptr = NULL;
 	while (first <= last)
 	{
-		char *haystack = (char *)m->buf + m->key_len * middle;
-		int rc = m->cmpfunc(haystack, key, m->key_len);
+		char *haystack = (char *)m->buf + m->item_len * middle;
+		int rc = m->cmpfunc(haystack, key, m->item_len);
 		if (rc == 0)
 		{
 			ptr = (void *)haystack;
