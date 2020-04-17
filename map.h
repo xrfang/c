@@ -30,6 +30,7 @@ int map_add_addr(Map *m, void *item);
 
 //0=not found; 1=deleted
 int map_del(Map *m, void *item);
+int map_del_addr(Map *m, void *item);
 
 int map_walk(Map *m, map_iter iter);
 

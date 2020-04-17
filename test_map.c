@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 #include "map.h"
 
@@ -28,13 +29,15 @@ int walk(const void *buf, size_t len)
 
 int walkstr(const void *buf, size_t len)
 {
-	printf("has: %s\n", (char *)buf);
+	printf("has: %s\n", *((char **)buf));
 	return 0;
 }
 
 int comp(const void *haystack, const void *needle, size_t len)
 {
-	return strncmp((char *)haystack, (char *)needle, len);
+	char *ptr1 = *(char **)haystack;
+	char *ptr2 = *(char **)needle;
+	return strcmp(ptr1, ptr2); 
 }
 
 int main(int argc, char **argv)
@@ -43,7 +46,7 @@ int main(int argc, char **argv)
 	map_init(&m, 1, 1);
 	map_setcap(&m, 10);
 	printf("inserting to map...\n");
-	char buf[6] = "kctepi";
+	char buf[7] = "kctepi";
 	for (int i = 0; i < strlen(buf); i++)
 		map_add(&m, buf + i);
 	show(&m);
@@ -72,23 +75,14 @@ int main(int argc, char **argv)
 	printf("now test string map...\n");
 	map_init(&m, sizeof(char *), sizeof(char *));
 	m.cmpfunc = comp;
-	char a[10] = "a";
-	char b[10] = "ab";
-	char c[10] = "abc";
-	char d[10] = "d";
-	char e[10] = "de";
-	char f[10] = "def";
-	map_add(&m, a);
-	map_add(&m, b);
-	map_add(&m, c);
-	map_add(&m, d);
-	map_add(&m, e);
-	map_add(&m, f);
-	/*
-	map_add(&m, "d");
-	map_add(&m, "de");
-	map_add(&m, "def");
-	*/
+	map_add_addr(&m, "a");
+	map_add_addr(&m, "ab");
+	map_add_addr(&m, "abcdefghi");
+	map_add_addr(&m, "d");
+	map_add_addr(&m, "de");
+	map_add_addr(&m, "def");
+	map_del_addr(&m, "abcdefghi");
+	map_add_addr(&m, "abc");
 	printf("map has %d items\n", m.cnt);
 	map_walk(&m, walkstr);
 	map_free(&m);

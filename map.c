@@ -115,6 +115,11 @@ int map_del(Map *m, void *item)
 	return 1;
 }
 
+int map_del_addr(Map *m, void *item)
+{
+	return map_del(m, &item);
+}
+
 int map_free(Map *m)
 {
 	free(m->buf);
