@@ -40,6 +40,6 @@ int map_del_addr(Map *m, void *item);
 
 int map_walk(Map *m, map_iter iter);
 
-int map_free(Map *m);
+void map_free(Map *m);
 
 #endif
