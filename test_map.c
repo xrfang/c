@@ -77,18 +77,18 @@ int main(int argc, char **argv)
 	map_del_addr(&m, "de");
 	map_del_addr(&m, "de"); //delete again has no effect
 	map_add_addr(&m, "abc");
-	int idx;
+	size_t idx;
 	char **p = map_find_addr(&m, "abc", &idx);
 	if (p == NULL)
 		printf("abc not found\n");
 	else
-		printf("found %s, idx=%d\n", *p, idx);
+		printf("found %s, idx=%ld\n", *p, idx);
 	p = map_find_addr(&m, "abcd", NULL);
 	if (p == NULL)
 		printf("abcd not found\n");
 	else
-		printf("found: %s, idx=%d\n", *p, idx);
-	printf("map has %d items\n", m.cnt);
+		printf("found: %s, idx=%ld\n", *p, idx);
+	printf("map has %ld items\n", m.cnt);
 	map_walk(&m, walkstr);
 	map_free(&m);
 }

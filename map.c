@@ -2,7 +2,7 @@
 
 #include "map.h"
 
-void map_init(Map *m, int item_len)
+void map_init(Map *m, size_t item_len)
 {
 	assert(item_len > 0);
 	m->item_len = item_len;
@@ -12,7 +12,7 @@ void map_init(Map *m, int item_len)
 	m->cmpfunc = NULL;
 }
 
-int map_setcap(Map *m, int cap)
+int map_setcap(Map *m, size_t cap)
 {
 	if (cap < m->cap)
 		return 1;
@@ -39,7 +39,7 @@ int map_walk(Map *m, map_iter iter)
 	return rc;
 }
 
-void *map_find(Map *m, void *key, int *idx)
+void *map_find(Map *m, void *key, size_t *idx)
 {
 	if (m->cmpfunc == NULL)
 		m->cmpfunc = memcmp;
@@ -67,14 +67,14 @@ void *map_find(Map *m, void *key, int *idx)
 	return ptr;
 }
 
-void *map_find_addr(Map *m, void *key, int *idx)
+void *map_find_addr(Map *m, void *key, size_t *idx)
 {
 	return map_find(m, &key, idx);
 }
 
 int map_add(Map *m, void *item)
 {
-	int idx;
+	size_t idx;
 	char *p = map_find(m, item, &idx);
 	if (p != NULL)
 	{
@@ -104,7 +104,7 @@ int map_add_addr(Map *m, void *item)
 
 int map_del(Map *m, void *item)
 {
-	int idx;
+	size_t idx;
 	char *p = map_find(m, item, &idx);
 	if (p == NULL)
 		return 0;

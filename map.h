@@ -1,8 +1,8 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include <stddef.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,22 +12,22 @@ typedef int (*map_cmp)(const void *, const void *, size_t);
 
 typedef struct
 {
-	int item_len; //length of each item
-	int cnt;	  //item count
-	int cap;	  //capacity of buf in term of # of items
+	size_t item_len; //length of each item
+	size_t cnt;		 //item count
+	size_t cap;		 //capacity of buf in term of # of items
 	void *buf;
 	map_cmp cmpfunc;
 } Map;
 
-void map_init(Map *m, int item_len);
+void map_init(Map *m, size_t item_len);
 
 //0=success; 1=cap too small; -1=out-of-memory
-int map_setcap(Map *m, int cap);
+int map_setcap(Map *m, size_t cap);
 
 //NULL=not found; otherwise pointer to item
 //idx: if not NULL, store position of item found/to insert
-void *map_find(Map *m, void *key, int *idx);
-void *map_find_addr(Map *m, void *key, int *idx);
+void *map_find(Map *m, void *key, size_t *idx);
+void *map_find_addr(Map *m, void *key, size_t *idx);
 
 //0=inserted; 1=updated; -1=out-of-memory
 int map_add(Map *m, void *item);
