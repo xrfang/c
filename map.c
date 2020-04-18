@@ -3,14 +3,25 @@
 #include <stdlib.h>
 #include <string.h>
 
-void map_init(Map *m, size_t item_len)
+struct Map
+{
+	size_t item_len; //length of each item
+	size_t cnt;		 //item count
+	size_t cap;		 //capacity of buf in term of # of items
+	char *buf;
+	map_cmp cmpfunc;
+};
+
+Map *map_init(size_t item_len)
 {
 	assert(item_len > 0);
+	Map *m = malloc(sizeof(Map));
 	m->item_len = item_len;
 	m->cap = 0;
 	m->cnt = 0;
 	m->buf = NULL;
 	m->cmpfunc = NULL;
+	return m;
 }
 
 int map_setcap(Map *m, size_t cap)
@@ -26,6 +37,11 @@ int map_setcap(Map *m, size_t cap)
 		m->buf = buf;
 	}
 	return 0;
+}
+
+void map_setcmp(Map *m, map_cmp cmp)
+{
+	m->cmpfunc = cmp;
 }
 
 int map_walk(Map *m, map_iter iter)
@@ -119,12 +135,23 @@ int map_del_addr(Map *m, void *item)
 	return map_del(m, &item);
 }
 
-void map_free(Map *m)
+size_t map_count(Map *m)
+{
+	return m->cnt;
+}
+
+void map_clear(Map *m)
 {
 	free(m->buf);
 	m->buf = NULL;
 	m->cnt = 0;
 	m->cap = 0;
+}
+
+void map_free(Map *m)
+{
+	map_clear(m);
+	free(m);
 }
 
 int map_cmpstr(const void *haystack, const void *needle, size_t len)
