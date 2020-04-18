@@ -26,9 +26,9 @@ Map *map_init(size_t item_len)
 
 int map_setcap(Map *m, size_t cap)
 {
-	if (cap < m->cap)
+	if (cap < m->cnt)
 		return 1;
-	if (cap > m->cap)
+	if (cap != m->cap)
 	{
 		void *buf = realloc(m->buf, cap * m->item_len);
 		if (buf == NULL)
