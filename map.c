@@ -58,6 +58,8 @@ int map_walk(Map *m, map_iter iter)
 
 void *map_find(const Map *m, void *key, size_t *idx)
 {
+	if (key == NULL)
+		return NULL;
 	map_cmp cmpfunc = (m->cmpfunc == NULL) ? memcmp : m->cmpfunc;
 	int first = 0;
 	int last = m->cnt - 1;
@@ -85,6 +87,8 @@ void *map_find(const Map *m, void *key, size_t *idx)
 
 void *map_find_addr(const Map *m, void *key, size_t *idx)
 {
+	if (key == NULL)
+		return NULL;
 	return map_find(m, &key, idx);
 }
 
@@ -116,11 +120,14 @@ int map_add(Map *m, void *item)
 
 int map_add_addr(Map *m, void *item)
 {
+	assert(item);
 	return map_add(m, &item);
 }
 
 int map_del(Map *m, void *item)
 {
+	if (item == NULL)
+		return 0;
 	size_t idx;
 	char *p = map_find(m, item, &idx);
 	if (p == NULL)
@@ -132,6 +139,8 @@ int map_del(Map *m, void *item)
 
 int map_del_addr(Map *m, void *item)
 {
+	if (item == NULL)
+		return 0;
 	return map_del(m, &item);
 }
 
