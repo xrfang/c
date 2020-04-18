@@ -1,6 +1,7 @@
-#include <assert.h>
-
 #include "map.h"
+#include <assert.h>
+#include <stdlib.h>
+#include <string.h>
 
 void map_init(Map *m, size_t item_len)
 {
@@ -32,25 +33,24 @@ int map_walk(Map *m, map_iter iter)
 	int rc = 0;
 	for (int i = 0; i < m->cnt; i++)
 	{
-		rc = iter((char *)m->buf + i * m->item_len, m->item_len);
+		rc = iter(m->buf + i * m->item_len, m->item_len);
 		if (rc != 0)
 			break;
 	}
 	return rc;
 }
 
-void *map_find(Map *m, void *key, size_t *idx)
+void *map_find(const Map *m, void *key, size_t *idx)
 {
-	if (m->cmpfunc == NULL)
-		m->cmpfunc = memcmp;
+	map_cmp cmpfunc = (m->cmpfunc == NULL) ? memcmp : m->cmpfunc;
 	int first = 0;
 	int last = m->cnt - 1;
-	int middle = (first + last) / 2;
+	int middle = first + (last - first) / 2;
 	void *ptr = NULL;
 	while (first <= last)
 	{
-		void *haystack = (char *)m->buf + m->item_len * middle;
-		int rc = m->cmpfunc(haystack, key, m->item_len);
+		void *haystack = m->buf + m->item_len * middle;
+		int rc = cmpfunc(haystack, key, m->item_len);
 		if (rc == 0)
 		{
 			ptr = haystack;
@@ -67,13 +67,14 @@ void *map_find(Map *m, void *key, size_t *idx)
 	return ptr;
 }
 
-void *map_find_addr(Map *m, void *key, size_t *idx)
+void *map_find_addr(const Map *m, void *key, size_t *idx)
 {
 	return map_find(m, &key, idx);
 }
 
 int map_add(Map *m, void *item)
 {
+	assert(item);
 	size_t idx;
 	char *p = map_find(m, item, &idx);
 	if (p != NULL)
@@ -89,7 +90,7 @@ int map_add(Map *m, void *item)
 		m->cap++;
 		m->buf = buf;
 	}
-	p = (char *)m->buf + m->item_len * idx;
+	p = m->buf + m->item_len * idx;
 	if (m->cnt > idx)
 		memmove(p + m->item_len, p, (m->cnt - idx) * m->item_len);
 	memcpy(p, item, m->item_len);

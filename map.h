@@ -1,11 +1,7 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include <stdbool.h>
 #include <stddef.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
 
 typedef int (*map_iter)(const void *, size_t);
 typedef int (*map_cmp)(const void *, const void *, size_t);
@@ -15,7 +11,7 @@ typedef struct
 	size_t item_len; //length of each item
 	size_t cnt;		 //item count
 	size_t cap;		 //capacity of buf in term of # of items
-	void *buf;
+	char *buf;
 	map_cmp cmpfunc;
 } Map;
 
@@ -26,8 +22,8 @@ int map_setcap(Map *m, size_t cap);
 
 //NULL=not found; otherwise pointer to item
 //idx: if not NULL, store position of item found/to insert
-void *map_find(Map *m, void *key, size_t *idx);
-void *map_find_addr(Map *m, void *key, size_t *idx);
+void *map_find(const Map *m, void *key, size_t *idx);
+void *map_find_addr(const Map *m, void *key, size_t *idx);
 
 //0=inserted; 1=updated; -1=out-of-memory
 int map_add(Map *m, void *item);
