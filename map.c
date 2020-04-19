@@ -149,6 +149,11 @@ size_t map_count(Map *m)
 	return m->cnt;
 }
 
+size_t map_capacity(Map *m)
+{
+	return m->cap;
+}
+
 void map_clear(Map *m)
 {
 	free(m->buf);

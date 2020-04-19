@@ -41,6 +41,7 @@ int main(int argc, char **argv)
 	char buf[7] = "kctepi";
 	for (int i = 0; i < strlen(buf); i++)
 		map_add(m, buf + i);
+	printf("capacity: %ld; count: %ld\n", map_capacity(m), map_count(m));
 	map_walk(m, show);
 	printf("\n");
 	printf("look for vowels in map...\n");

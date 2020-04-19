@@ -10,9 +10,9 @@ typedef struct Map Map;
 Map *map_init(size_t item_len);
 void map_free(Map *m);
 
-void map_clear(Map *m);
-int map_cmpstr(const void *haystack, const void *needle, size_t len);
+size_t map_capacity(Map *m);
 size_t map_count(Map *m);
+void map_clear(Map *m);
 
 //0=inserted; 1=updated; -1=out-of-memory
 int map_add(Map *m, void *item);
@@ -31,6 +31,7 @@ void *map_find_addr(const Map *m, void *key, size_t *idx);
 int map_setcap(Map *m, size_t cap);
 void map_setcmp(Map *m, map_cmp cmp);
 
+int map_cmpstr(const void *haystack, const void *needle, size_t len);
 int map_walk(Map *m, map_iter iter);
 
 #endif
