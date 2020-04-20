@@ -65,6 +65,9 @@ void *map_get(Map *m, size_t idx);
 //get item address at specified offset.
 void *map_get_addr(Map *m, size_t idx);
 
+//get the raw buffer of the map.
+void *map_rawbuf(Map *m);
+
 //set map capacity. return 0 if successful; 1 means
 //new capacity is too small for the items currently
 //in map; -1 means out of memory.

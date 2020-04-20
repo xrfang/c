@@ -86,6 +86,11 @@ int main(int argc, char **argv)
 		printf("vowel letter not found\n");
 	map_walk(m, show, NULL);
 	printf("\n");
+	printf("raw content of map:\n");
+	char *raw = map_rawbuf(m);
+	for (int i = 0; i < map_count(m); i++)
+		printf("%c ", raw[i]);
+	printf("\n");
 	map_free(m);
 	printf("now test string map...\n");
 	m = map_init(sizeof(char *));

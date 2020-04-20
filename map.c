@@ -158,6 +158,11 @@ void *map_get_addr(Map *m, size_t idx)
 	return *(void **)(m->buf + m->item_len * idx);
 }
 
+void *map_rawbuf(Map *m)
+{
+	return m->buf;
+}
+
 size_t map_count(Map *m)
 {
 	return m->cnt;
