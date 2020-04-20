@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
@@ -12,24 +13,41 @@ void find(Map *m, void *key)
 		printf("found: %c\n", *ptr);
 }
 
-int show(const void *buf, size_t len)
+int show(const void *buf, size_t len, void *data)
 {
 	char c = ((char *)buf)[0];
 	printf("%c", c);
 	return 0;
 }
 
-int walk(const void *buf, size_t len)
+int walk(const void *buf, size_t len, void *data)
 {
+	int *pos = (int *)data;
+	*pos++;
 	char c = ((char *)buf)[0];
 	if (strchr("aeiou", c))
 		return 1;
 	return 0;
 }
 
-int walkstr(const void *buf, size_t len)
+typedef struct
 {
-	printf("has: %s\n", *(char **)buf);
+	int len;
+	int pos;
+	int idx;
+} strec;
+
+int walkstr(const void *buf, size_t len, void *data)
+{
+	strec *sr = (strec *)data;
+	sr->idx++;
+	char *str = *(char **)buf;
+	if (strlen(str) > sr->len)
+	{
+		sr->len = strlen(str);
+		sr->pos = sr->idx;
+	}
+	printf("has: %s\n", str);
 	return 0;
 }
 
@@ -42,11 +60,12 @@ int main(int argc, char **argv)
 	for (int i = 0; i < strlen(buf); i++)
 		map_add(m, buf + i);
 	printf("capacity: %ld; count: %ld\n", map_capacity(m), map_count(m));
-	map_walk(m, show);
+	map_walk(m, show, NULL);
 	printf("\n");
 	printf("look for vowels in map...\n");
-	if (map_walk(m, walk))
-		printf("found vowel letter\n");
+	int pos = -1;
+	if (map_walk(m, walk, &pos))
+		printf("found vowel letter at position %d\n", pos);
 	else
 		printf("vowel letter not found\n");
 	printf("find items in map...\n");
@@ -60,11 +79,12 @@ int main(int argc, char **argv)
 		else
 			printf("%c not found\n", *(char *)(needle + i));
 	printf("look for vowels in map (again)...\n");
-	if (map_walk(m, walk))
-		printf("found vowel letter\n");
+	pos = -1;
+	if (map_walk(m, walk, &pos))
+		printf("found vowel letter at position %d\n", pos);
 	else
 		printf("vowel letter not found\n");
-	map_walk(m, show);
+	map_walk(m, show, NULL);
 	printf("\n");
 	map_free(m);
 	printf("now test string map...\n");
@@ -91,6 +111,12 @@ int main(int argc, char **argv)
 	else
 		printf("found: %s, idx=%ld\n", *p, idx);
 	printf("map has %ld items\n", map_count(m));
-	map_walk(m, walkstr);
+	strec sr = {0, 0, -1};
+	map_walk(m, walkstr, &sr);
+	printf("longest string at position %d, length=%d\n", sr.pos, sr.len);
+	char *lp = map_get_addr(m, sr.pos);
+	printf("the longest string is: %s\n", lp);
+	char *nx = map_get_addr(m, 100);
+	assert(nx == NULL);
 	map_free(m);
 }

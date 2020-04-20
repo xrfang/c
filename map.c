@@ -44,12 +44,12 @@ void map_setcmp(Map *m, map_cmp cmp)
 	m->cmpfunc = cmp;
 }
 
-int map_walk(Map *m, map_iter iter)
+int map_walk(Map *m, map_iter iter, void *user_ptr)
 {
 	int rc = 0;
 	for (int i = 0; i < m->cnt; i++)
 	{
-		rc = iter(m->buf + i * m->item_len, m->item_len);
+		rc = iter(m->buf + i * m->item_len, m->item_len, user_ptr);
 		if (rc != 0)
 			break;
 	}
@@ -142,6 +142,20 @@ int map_del_addr(Map *m, void *item)
 	if (item == NULL)
 		return 0;
 	return map_del(m, &item);
+}
+
+void *map_get(Map *m, size_t idx)
+{
+	if (idx >= m->cnt)
+		return NULL;
+	return m->buf + m->item_len * idx;
+}
+
+void *map_get_addr(Map *m, size_t idx)
+{
+	if (idx >= m->cnt)
+		return NULL;
+	return *(void **)(m->buf + m->item_len * idx);
 }
 
 size_t map_count(Map *m)

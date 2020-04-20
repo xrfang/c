@@ -10,8 +10,10 @@ Homepage: https://github.com/xrfang/c
 #include <stddef.h>
 
 //iterator, used by map_walk()
+//arguments: pointer to current item, item_length and
+//user pointer.
 //return non-zero will cause map_walk() to abort iteration
-typedef int (*map_iter)(const void *, size_t);
+typedef int (*map_iter)(const void *, size_t, void *);
 
 //comparator, used by map_find() and map_find_addr()
 //signature same as memcmp()
@@ -58,6 +60,11 @@ void *map_find(const Map *m, void *key, size_t *idx);
 //search for address of item in the map.
 void *map_find_addr(const Map *m, void *key, size_t *idx);
 
+//get item at specified offset, if idx out of range, return NULL
+void *map_get(Map *m, size_t idx);
+//get item address at specified offset.
+void *map_get_addr(Map *m, size_t idx);
+
 //set map capacity. return 0 if successful; 1 means
 //new capacity is too small for the items currently
 //in map; -1 means out of memory.
@@ -73,6 +80,6 @@ int map_cmpstr(const void *haystack, const void *needle, size_t len);
 //if all items are traversed.  if the iterator returns
 //non-zero, the process is aborted, and that value is
 //returned.
-int map_walk(Map *m, map_iter iter);
+int map_walk(Map *m, map_iter iter, void *user_ptr);
 
 #endif
