@@ -78,5 +78,6 @@ int SplitterPipeWait(SplitterPipe *sp)
 	sp->Count = sp->bcnt;
 	if (sp->res == 0)
 		sp->res = res;
+	free(sp->name);
 	return sp->res;
 }
