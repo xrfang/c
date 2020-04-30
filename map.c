@@ -130,7 +130,7 @@ int map_add_addr(Map *m, void *item, void *prev)
 	return _map_add(m, &item, prev);
 }
 
-int map_del(Map *m, void *item)
+static int _map_del(Map *m, void *item, void *ptr)
 {
 	if (item == NULL)
 		return 0;
@@ -138,16 +138,23 @@ int map_del(Map *m, void *item)
 	char *p = map_find(m, item, &idx);
 	if (p == NULL)
 		return 0;
+	if (ptr != NULL)
+		memcpy(ptr, p, m->item_len);
 	memmove(p, p + m->item_len, (m->cnt - idx - 1) * m->item_len);
 	m->cnt--;
 	return 1;
 }
 
-int map_del_addr(Map *m, void *item)
+int map_del(Map *m, void *item)
+{
+	return _map_del(m, item, NULL);
+}
+
+int map_del_addr(Map *m, void *item, void *ptr)
 {
 	if (item == NULL)
 		return 0;
-	return map_del(m, &item);
+	return _map_del(m, &item, ptr);
 }
 
 void *map_get(Map *m, size_t idx)

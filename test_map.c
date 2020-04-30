@@ -58,6 +58,16 @@ void strmap_add(Map *m, char *key, char *val)
 		printf("[%s] is an old item [%s => %s]\n", key, old->val, val);
 }
 
+void strmap_del(Map *m, char *key)
+{
+	strmap target = {.key = key};
+	strmap *kv;
+	if (0 == map_del_addr(m, &target, &kv))
+		printf("[%s] is not in map\n", key);
+	else
+		printf("[%s] deleted from map [val=%s]\n", key, kv->val);
+}
+
 void strmap_clear(Map *m)
 {
 	strmap **kv = map_rawbuf(m);
@@ -141,8 +151,8 @@ int main(int argc, char **argv)
 	map_add_addr(m, "d", NULL);
 	map_add_addr(m, "de", NULL);
 	map_add_addr(m, "def", NULL);
-	map_del_addr(m, "de");
-	map_del_addr(m, "de"); //delete again has no effect
+	map_del_addr(m, "de", NULL);
+	map_del_addr(m, "de", NULL); //delete again has no effect
 	map_add_addr(m, "abc", NULL);
 	size_t idx;
 	char **p = map_find_addr(m, "abc", &idx);
@@ -170,6 +180,8 @@ int main(int argc, char **argv)
 	strmap_add(m, "a", "2");
 	strmap_add(m, "b", "1");
 	strmap_add(m, "b", "2");
+	strmap_del(m, "b");
+	strmap_del(m, "c");
 	strmap_clear(m);
 	strmap_clear(m); //test double-clear
 	map_free(m);

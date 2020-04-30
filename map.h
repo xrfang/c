@@ -51,8 +51,10 @@ int map_add_addr(Map *m, void *item, void *prev);
 //delete item from map. return 0 if item was not found;
 //1 if item was found and deleted.
 int map_del(Map *m, void *item);
-//delete address of item from map.
-int map_del_addr(Map *m, void *item);
+//delete address of item from map. If the optional ptr
+//pointer is not NULL, deleted value of the item is
+//returned in it.
+int map_del_addr(Map *m, void *item, void *ptr);
 
 //search for item in the map. if found, return pointer
 //to the item, otherwise NULL. the second argument idx
