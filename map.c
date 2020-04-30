@@ -175,8 +175,11 @@ size_t map_capacity(Map *m)
 
 void map_clear(Map *m)
 {
-	free(m->buf);
-	m->buf = NULL;
+	if (m->buf != NULL)
+	{
+		free(m->buf);
+		m->buf = NULL;
+	}
 	m->cnt = 0;
 	m->cap = 0;
 }
