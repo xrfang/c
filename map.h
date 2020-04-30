@@ -43,8 +43,10 @@ size_t map_count(Map *m);
 //in the map; 1 if the item was there and updated; -1
 //for out-of-memory.
 int map_add(Map *m, void *item);
-//add address of item into the map.
-int map_add_addr(Map *m, void *item);
+//add address of item into the map.  If the optional
+//prev pointer is not NULL, old value of the item is
+//returned in it.
+int map_add_addr(Map *m, void *item, void *prev);
 
 //delete item from map. return 0 if item was not found;
 //1 if item was found and deleted.

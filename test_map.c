@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 #include "map.h"
 
@@ -36,6 +37,45 @@ typedef struct
 	int pos;
 	int idx;
 } strec;
+
+typedef struct
+{
+	char *key;
+	char *val;
+} strmap;
+
+void strmap_add(Map *m, char *key, char *val)
+{
+	strmap *kv = malloc(sizeof(strmap));
+	kv->key = malloc(strlen(key) + 1);
+	strcpy(kv->key, key);
+	kv->val = malloc(strlen(val) + 1);
+	strcpy(kv->val, val);
+	strmap *old;
+	if (0 == map_add_addr(m, kv, &old))
+		printf("[%s] is a new item\n", key);
+	else
+		printf("[%s] is an old item [%s => %s]\n", key, old->val, val);
+}
+
+void strmap_clear(Map *m)
+{
+	strmap **kv = map_rawbuf(m);
+	for (int i = 0; i < map_count(m); i++)
+	{
+		free(kv[i]->key);
+		free(kv[i]->val);
+		free(kv[i]);
+	}
+	map_clear(m);
+}
+
+int kvcmp(const void *haystack, const void *needle, size_t len)
+{
+	strmap *h = *(strmap **)haystack;
+	strmap *n = *(strmap **)needle;
+	return strcmp(h->key, n->key);
+}
 
 int walkstr(const void *buf, size_t len, void *data)
 {
@@ -95,15 +135,15 @@ int main(int argc, char **argv)
 	printf("now test string map...\n");
 	m = map_init(sizeof(char *));
 	map_setcmp(m, map_cmpstr);
-	map_add_addr(m, "a");
-	map_add_addr(m, "ab");
-	map_add_addr(m, "abcdefghi");
-	map_add_addr(m, "d");
-	map_add_addr(m, "de");
-	map_add_addr(m, "def");
+	map_add_addr(m, "a", NULL);
+	map_add_addr(m, "ab", NULL);
+	map_add_addr(m, "abcdefghi", NULL);
+	map_add_addr(m, "d", NULL);
+	map_add_addr(m, "de", NULL);
+	map_add_addr(m, "def", NULL);
 	map_del_addr(m, "de");
 	map_del_addr(m, "de"); //delete again has no effect
-	map_add_addr(m, "abc");
+	map_add_addr(m, "abc", NULL);
 	size_t idx;
 	char **p = map_find_addr(m, "abc", &idx);
 	if (p == NULL)
@@ -123,5 +163,14 @@ int main(int argc, char **argv)
 	printf("the longest string is: %s\n", lp);
 	char *nx = map_get_addr(m, 100);
 	assert(nx == NULL);
+	map_clear(m);
+	//map size of char* compatible with kv*
+	map_setcmp(m, kvcmp);
+	strmap_add(m, "a", "1");
+	strmap_add(m, "a", "2");
+	strmap_add(m, "b", "1");
+	strmap_add(m, "b", "2");
+	strmap_clear(m);
+	strmap_clear(m); //test double-clear
 	map_free(m);
 }

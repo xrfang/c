@@ -92,13 +92,13 @@ void *map_find_addr(const Map *m, void *key, size_t *idx)
 	return map_find(m, &key, idx);
 }
 
-int map_add(Map *m, void *item)
+static int _map_add(Map *m, void *item, void *prev)
 {
-	assert(item);
 	size_t idx;
 	char *p = map_find(m, item, &idx);
 	if (p != NULL)
 	{
+		memcpy(prev, p, m->item_len);
 		memcpy(p, item, m->item_len);
 		return 1;
 	}
@@ -118,10 +118,16 @@ int map_add(Map *m, void *item)
 	return 0;
 }
 
-int map_add_addr(Map *m, void *item)
+int map_add(Map *m, void *item)
 {
 	assert(item);
-	return map_add(m, &item);
+	return _map_add(m, item, NULL);
+}
+
+int map_add_addr(Map *m, void *item, void *prev)
+{
+	assert(item);
+	return _map_add(m, &item, prev);
 }
 
 int map_del(Map *m, void *item)
