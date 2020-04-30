@@ -98,7 +98,8 @@ static int _map_add(Map *m, void *item, void *prev)
 	char *p = map_find(m, item, &idx);
 	if (p != NULL)
 	{
-		memcpy(prev, p, m->item_len);
+		if (prev != NULL)
+			memcpy(prev, p, m->item_len);
 		memcpy(p, item, m->item_len);
 		return 1;
 	}
