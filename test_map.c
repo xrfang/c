@@ -24,7 +24,7 @@ int show(const void *buf, size_t len, void *data)
 int walk(const void *buf, size_t len, void *data)
 {
 	int *pos = (int *)data;
-	*pos++;
+	(*pos)++;
 	char c = ((char *)buf)[0];
 	if (strchr("aeiou", c))
 		return 1;
@@ -70,6 +70,7 @@ void strmap_del(Map *m, char *key)
 
 void strmap_clear(Map *m)
 {
+	printf("strmap_clear: map has %ld items\n", map_count(m));
 	strmap **kv = map_rawbuf(m);
 	for (int i = 0; i < map_count(m); i++)
 	{
