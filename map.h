@@ -57,7 +57,7 @@ int map_del(Map *m, void *item);
 int map_del_addr(Map *m, void *item, void *ptr);
 //set map count to new_cnt, returns old cnt. If new_cnt is 
 //same or larger than current cnt, nothing happens.
-int map_trim(Map *m, int new_cnt);
+int map_trim(Map *m, size_t new_cnt);
 
 //search for item in the map. if found, return pointer
 //to the item, otherwise NULL. the second argument idx
