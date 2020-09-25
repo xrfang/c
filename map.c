@@ -39,7 +39,7 @@ int map_setcap(Map *m, size_t cap)
 	return 0;
 }
 
-void map_setcmp(Map *m, map_cmp cmp)
+inline void map_setcmp(Map *m, map_cmp cmp)
 {
 	m->cmpfunc = cmp;
 }
@@ -85,7 +85,7 @@ void *map_find(const Map *m, void *key, size_t *idx)
 	return ptr;
 }
 
-void *map_find_addr(const Map *m, void *key, size_t *idx)
+inline void *map_find_addr(const Map *m, void *key, size_t *idx)
 {
 	if (key == NULL)
 		return NULL;
@@ -119,13 +119,13 @@ static int _map_add(Map *m, void *item, void *prev)
 	return 0;
 }
 
-int map_add(Map *m, void *item)
+inline int map_add(Map *m, void *item)
 {
 	assert(item);
 	return _map_add(m, item, NULL);
 }
 
-int map_add_addr(Map *m, void *item, void *prev)
+inline int map_add_addr(Map *m, void *item, void *prev)
 {
 	assert(item);
 	return _map_add(m, &item, prev);
@@ -146,50 +146,50 @@ static int _map_del(Map *m, void *item, void *ptr)
 	return 1;
 }
 
-int map_del(Map *m, void *item)
+inline int map_del(Map *m, void *item)
 {
 	return _map_del(m, item, NULL);
 }
 
-int map_del_addr(Map *m, void *item, void *ptr)
+inline int map_del_addr(Map *m, void *item, void *ptr)
 {
 	if (item == NULL)
 		return 0;
 	return _map_del(m, &item, ptr);
 }
 
-int map_del_all(Map *m)
+inline int map_del_all(Map *m)
 {
 	int cnt = m->cnt;
 	m->cnt = 0;
 	return cnt;
 }
 
-void *map_get(Map *m, size_t idx)
+inline void *map_get(Map *m, size_t idx)
 {
 	if (idx >= m->cnt)
 		return NULL;
 	return m->buf + m->item_len * idx;
 }
 
-void *map_get_addr(Map *m, size_t idx)
+inline void *map_get_addr(Map *m, size_t idx)
 {
 	if (idx >= m->cnt)
 		return NULL;
 	return *(void **)(m->buf + m->item_len * idx);
 }
 
-void *map_rawbuf(Map *m)
+inline void *map_rawbuf(Map *m)
 {
 	return m->buf;
 }
 
-size_t map_count(Map *m)
+inline size_t map_count(Map *m)
 {
 	return m->cnt;
 }
 
-size_t map_capacity(Map *m)
+inline size_t map_capacity(Map *m)
 {
 	return m->cap;
 }
@@ -205,13 +205,13 @@ void map_clear(Map *m)
 	m->cap = 0;
 }
 
-void map_free(Map *m)
+inline void map_free(Map *m)
 {
 	map_clear(m);
 	free(m);
 }
 
-int map_cmpstr(const void *haystack, const void *needle, size_t len)
+inline int map_cmpstr(const void *haystack, const void *needle, size_t len)
 {
 	char *ptr1 = *(char **)haystack;
 	char *ptr2 = *(char **)needle;
