@@ -158,6 +158,13 @@ int map_del_addr(Map *m, void *item, void *ptr)
 	return _map_del(m, &item, ptr);
 }
 
+int map_del_all(Map *m)
+{
+	int cnt = m->cnt;
+	m->cnt = 0;
+	return cnt;
+}
+
 void *map_get(Map *m, size_t idx)
 {
 	if (idx >= m->cnt)

@@ -174,7 +174,9 @@ int main(int argc, char **argv)
 	printf("the longest string is: %s\n", lp);
 	char *nx = map_get_addr(m, 100);
 	assert(nx == NULL);
-	map_clear(m);
+	printf("map has %ld items\n", map_count(m));
+	map_del_all(m);
+	printf("map has %ld items after delete all\n", map_count(m));
 	//map size of char* compatible with kv*
 	map_setcmp(m, kvcmp);
 	strmap_add(m, "a", "1");

@@ -55,6 +55,10 @@ int map_del(Map *m, void *item);
 //pointer is not NULL, deleted value of the item is
 //returned in it.
 int map_del_addr(Map *m, void *item, void *ptr);
+//delete all items in the map, returns items deleted.
+//Note that this function merely set map's count to 0
+//without releasing its internal buffer.
+int map_del_all(Map *m);
 
 //search for item in the map. if found, return pointer
 //to the item, otherwise NULL. the second argument idx
