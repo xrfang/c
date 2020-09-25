@@ -158,10 +158,11 @@ inline int map_del_addr(Map *m, void *item, void *ptr)
 	return _map_del(m, &item, ptr);
 }
 
-inline int map_del_all(Map *m)
+inline int map_trim(Map *m, int new_cnt)
 {
 	int cnt = m->cnt;
-	m->cnt = 0;
+	if (new_cnt < cnt)
+		m->cnt = new_cnt;
 	return cnt;
 }
 

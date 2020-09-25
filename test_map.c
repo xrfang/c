@@ -175,8 +175,12 @@ int main(int argc, char **argv)
 	char *nx = map_get_addr(m, 100);
 	assert(nx == NULL);
 	printf("map has %ld items\n", map_count(m));
-	map_del_all(m);
-	printf("map has %ld items after delete all\n", map_count(m));
+	map_trim(m, 100);
+	printf("map has %ld items after trim to 100\n", map_count(m));
+	map_trim(m, 3);
+	printf("map has %ld items after trim to 3\n", map_count(m));
+	map_clear(m);
+	printf("map has %ld items after clear\n", map_count(m));
 	//map size of char* compatible with kv*
 	map_setcmp(m, kvcmp);
 	strmap_add(m, "a", "1");
