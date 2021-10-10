@@ -27,7 +27,7 @@ typedef struct Map Map;
 //same length.
 Map *map_init(size_t item_len);
 
-//clear map buffer, reseet count and capacity to 0
+//clear map buffer, reset count and capacity to 0
 //map is still usable after clear.
 void map_clear(Map *m);
 //clear map buffer and release the map itself
