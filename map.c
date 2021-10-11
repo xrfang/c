@@ -47,7 +47,7 @@ void map_setcmp(Map *m, map_cmp cmp)
 int map_walk(Map *m, map_iter iter, void *user_ptr)
 {
 	int rc = 0;
-	for (int i = 0; i < m->cnt; i++)
+	for (size_t i = 0; i < m->cnt; i++)
 	{
 		rc = iter(m->buf + i * m->item_len, m->item_len, user_ptr);
 		if (rc != 0)
@@ -158,9 +158,9 @@ int map_del_addr(Map *m, void *item, void *ptr)
 	return _map_del(m, &item, ptr);
 }
 
-int map_trim(Map *m, size_t new_cnt)
+size_t map_trim(Map *m, size_t new_cnt)
 {
-	int cnt = m->cnt;
+	size_t cnt = m->cnt;
 	if (new_cnt < cnt)
 		m->cnt = new_cnt;
 	return cnt;
