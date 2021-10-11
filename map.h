@@ -7,6 +7,10 @@ Homepage: https://github.com/xrfang/c
 #ifndef MAP_H
 #define MAP_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stddef.h>
 
 //iterator, used by map_walk()
@@ -91,5 +95,9 @@ int map_cmpstr(const void *haystack, const void *needle, size_t len);
 //non-zero, the process is aborted, and that value is
 //returned.
 int map_walk(Map *m, map_iter iter, void *user_ptr);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
