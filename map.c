@@ -15,7 +15,7 @@ struct Map
 Map *map_init(size_t item_len)
 {
 	assert(item_len > 0);
-	Map *m = malloc(sizeof(Map));
+	Map *m = (Map *)malloc(sizeof(Map));
 	m->item_len = item_len;
 	m->cap = 0;
 	m->cnt = 0;
@@ -30,7 +30,7 @@ int map_setcap(Map *m, size_t cap)
 		return 1;
 	if (cap != m->cap)
 	{
-		void *buf = realloc(m->buf, cap * m->item_len);
+		char *buf = (char *)realloc(m->buf, cap * m->item_len);
 		if (buf == NULL)
 			return -1;
 		m->cap = cap;
@@ -95,7 +95,7 @@ inline void *map_find_addr(const Map *m, void *key, size_t *idx)
 static int _map_add(Map *m, void *item, void *prev)
 {
 	size_t idx;
-	char *p = map_find(m, item, &idx);
+	char *p = (char *)map_find(m, item, &idx);
 	if (p != NULL)
 	{
 		if (prev != NULL)
@@ -105,7 +105,7 @@ static int _map_add(Map *m, void *item, void *prev)
 	}
 	if (m->cap == m->cnt)
 	{
-		void *buf = realloc(m->buf, (m->cap + 1) * m->item_len);
+		char *buf = (char *)realloc(m->buf, (m->cap + 1) * m->item_len);
 		if (buf == NULL)
 			return -1;
 		m->cap++;
@@ -136,7 +136,7 @@ static int _map_del(Map *m, void *item, void *ptr)
 	if (item == NULL)
 		return 0;
 	size_t idx;
-	char *p = map_find(m, item, &idx);
+	char *p = (char *)map_find(m, item, &idx);
 	if (p == NULL)
 		return 0;
 	if (ptr != NULL)
