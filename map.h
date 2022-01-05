@@ -7,6 +7,10 @@ Homepage: https://github.com/xrfang/c
 #ifndef MAP_H
 #define MAP_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stddef.h>
 
 //iterator, used by map_walk()
@@ -57,7 +61,7 @@ int map_del(Map *m, void *item);
 int map_del_addr(Map *m, void *item, void *ptr);
 //set map count to new_cnt, returns old cnt. If new_cnt is 
 //same or larger than current cnt, nothing happens.
-int map_trim(Map *m, size_t new_cnt);
+size_t map_trim(Map *m, size_t new_cnt);
 
 //search for item in the map. if found, return pointer
 //to the item, otherwise NULL. the second argument idx
@@ -91,5 +95,9 @@ int map_cmpstr(const void *haystack, const void *needle, size_t len);
 //non-zero, the process is aborted, and that value is
 //returned.
 int map_walk(Map *m, map_iter iter, void *user_ptr);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
